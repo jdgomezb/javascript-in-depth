@@ -1,34 +1,57 @@
 const listElement = document.querySelector('.posts');
 const postTemplate = document.getElementById('single-post');
-const URL = 'https://jsonplaceholder.typicode.com/pos';
+const URL = 'https://jsonplaceholder.typicode.com/posts';
 const form = document.querySelector('#new-post form');
 const fetchButton = document.querySelector('#available-posts button');
 const postList = document.querySelector('ul');
 
 const sendHttpRequest = (method, url, data) => {
-  const promise = new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
+  // const promise = new Promise((resolve, reject) => {
+    // const xhr = new XMLHttpRequest();
+    // xhr.setRequestHeader('Content-Type', 'application/json');
     
-    xhr.open(method, url);
+    // xhr.open(method, url);
     
-    xhr.responseType = 'json';
+    // xhr.responseType = 'json';
     
-    xhr.onload = function() {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        resolve(xhr.response);
-      } else {
-        reject(new Error('Something went wrong!'));
-      }
-    };
+    // xhr.onload = function() {
+    //   if (xhr.status >= 200 && xhr.status < 300) {
+    //     resolve(xhr.response);
+    //   } else {
+    //     reject(new Error('Something went wrong!'));
+    //   }
+    // };
     
-    xhr.onerror = function() {
-      reject(new Error('Request failed!'));
-    };
+    // xhr.onerror = function() {
+    //   reject(new Error('Request failed!'));
+    // };
     
-    xhr.send(JSON.stringify(data));
-  });
+    // xhr.send(JSON.stringify(data));
 
-  return promise;
+  // });
+  // return promise;
+
+  return fetch(url, {
+    method: method,
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => {
+    // response.text() 
+    // response.blob()
+    if (response.status >= 200 && response.status < 300) {
+      return response.json();
+    } else {
+      return response.json().then(errData => {
+        console.error(errData);
+        throw new Error('Something went wrong - server-side');
+      });
+    }
+  }).catch(error => {
+    console.error(error);
+    throw new Error('Something went wrong!');
+  });
 };
 
 // const fetchPosts = () => {
