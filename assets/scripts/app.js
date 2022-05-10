@@ -33,10 +33,11 @@ const sendHttpRequest = (method, url, data) => {
 
   return fetch(url, {
     method: method,
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    // body: JSON.stringify(data),
+    body: data, // Uses the formData object
+    // headers: {
+    //   'Content-Type': 'application/json'
+    // }
   }).then(response => {
     // response.text() 
     // response.blob()
@@ -88,13 +89,20 @@ const fetchPosts = async () => {
 
 const createPost = async (title, content) => {
   const userId = Math.floor(Math.random() * 10) + 1;
-  const post = {
-    title,
-    body: content,
-    userId,
-  }
+  // const post = {
+  //   title,
+  //   body: content,
+  //   userId,
+  // }
 
-  const responseData = await sendHttpRequest('POST',URL, post);
+  const formData = new FormData(form); // Different from JSON data
+  // formData.append('title', title);
+  // formData.append('body', content);
+  formData.append('userId', userId);
+  //formData.append('someFile', , 'photo.png'); You can send files
+
+  // const responseData = await sendHttpRequest('POST',URL, post);
+  const responseData = await sendHttpRequest('POST',URL, formData);
 };
 
 // fetchPosts();
